@@ -22,6 +22,13 @@ public class Stepdefs {
         element.click();
     }
 
+    @Given("^new user is selected$")
+    public void new_user_is_selected() throws Throwable {
+        driver.get(baseUrl);
+        WebElement element = driver.findElement(By.linkText("register new user"));
+        element.click();
+    }
+
     @When("^username \"([^\"]*)\" and password \"([^\"]*)\" are given$")
     public void username_and_password_are_given(String username, String password) throws Throwable {
         WebElement element = driver.findElement(By.name("username"));
@@ -62,8 +69,48 @@ public class Stepdefs {
     public void user_is_not_logged_in_and_error_message_is_given() throws Throwable {
         pageHasContent("invalid username or password");
         pageHasContent("Give your credentials to login");
-        try{ Thread.sleep(2); } catch(Exception e){}  // suoritus pysähtyy 120 sekunniksi
+    }
 
+    @When("^correct new username \"([^\"]*)\" and correct password \"([^\"]*)\" and correct password confirmation \"([^\"]*)\" are given$")
+    public void correct_new_username_and_correct_password_and_correct_password_confirmation_are_given(String username, String password, String passwordConfirmation) throws Throwable {
+        signUpWith(username, password, passwordConfirmation);
+    }
+
+    @When("^too short username \"([^\"]*)\" and correct password \"([^\"]*)\" and correct password confirmation \"([^\"]*)\" are given$")
+    public void too_short_username_and_correct_password_and_correct_password_confirmation_are_given(String username, String password, String passwordConfirmation) throws Throwable {
+        signUpWith(username, password, passwordConfirmation);
+    }
+
+    @When("^correct new username \"([^\"]*)\" and too short password \"([^\"]*)\" and too short password confirmation \"([^\"]*)\" are given$")
+    public void correct_new_username_and_too_short_password_and_too_short_password_confirmation_are_given(String username, String password, String passwordConfirmation) throws Throwable {
+        signUpWith(username, password, passwordConfirmation);
+    }
+
+    @When("^correct new username \"([^\"]*)\" and letter-only password \"([^\"]*)\" and letter-only password confirmation \"([^\"]*)\" are given$")
+    public void correct_new_username_and_letter_only_password_and_letter_only_password_confirmation_are_given(String username, String password, String passwordConfirmation) throws Throwable {
+        signUpWith(username, password, passwordConfirmation);
+    }
+
+    @When("^already taken username \"([^\"]*)\" and valid password \"([^\"]*)\" and valid password confirmation \"([^\"]*)\" are given$")
+    public void already_taken_username_and_valid_password_and_valid_password_confirmation_are_given(String username, String password, String passwordConfirmation) throws Throwable {
+        signUpWith(username, password, passwordConfirmation);
+    }
+    
+        @When("^correct new username \"([^\"]*)\" and valid password \"([^\"]*)\" and not matching password confirmation \"([^\"]*)\" are given$")
+    public void correct_new_username_and_valid_password_and_not_matching_password_confirmation_are_given(String username, String password, String passwordConfirmation) throws Throwable {
+        signUpWith(username, password, passwordConfirmation);
+
+    }
+
+
+    @Then("^user is created and forwarded to wellcome$")
+    public void user_is_created_and_forwarded_to_wellcome() throws Throwable {
+        pageHasContent("Welcome to Ohtu Application!");
+    }
+
+    @Then("^user is not created and error \"([^\"]*)\" is reported$")
+    public void user_is_not_created_and_error_is_reported(String arg1) throws Throwable {
+        pageHasContent(arg1);
     }
 
     @After
@@ -83,6 +130,18 @@ public class Stepdefs {
         element = driver.findElement(By.name("password"));
         element.sendKeys(password);
         element = driver.findElement(By.name("login"));
+        element.submit();
+    }
+
+    private void signUpWith(String username, String password, String passwordConfirmation) {
+        assertTrue(driver.getPageSource().contains("Create username and give password"));
+        WebElement element = driver.findElement(By.name("username"));
+        element.sendKeys(username);
+        element = driver.findElement(By.name("password"));
+        element.sendKeys(password);
+        element = driver.findElement(By.name("passwordConfirmation"));
+        element.sendKeys(passwordConfirmation);
+        element = driver.findElement(By.name("signup"));
         element.submit();
     }
 }
