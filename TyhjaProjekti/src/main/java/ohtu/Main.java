@@ -18,11 +18,13 @@ public class Main {
 
         String bodyText = Request.Get(url).execute().returnContent().asString();
 
-//        System.out.println("json-muotoinen data:");
-//        System.out.println( bodyText );
-
         Gson mapper = new Gson();
         Submission[] subs = mapper.fromJson(bodyText, Submission[].class);
+        
+        String courseUrl = "https://ohtustats2017.herokuapp.com/courses/1.json";
+        String courseText = Request.Get(courseUrl).execute().returnContent().asString();
+        
+        Course ohtu = mapper.fromJson(courseText, Course.class);
         
         
         int totalDone = 0;
@@ -32,7 +34,11 @@ public class Main {
         for (Submission submission : subs) {
             totalDone += submission.listDoneExercises().size();
             totalHours += submission.getHours();
-            System.out.println(submission);
+            
+            String s = submission.toString();
+            System.out.println(s.substring(0, s.indexOf(",")) + " (maksimi " + 
+                    ohtu.getNumberOfExercises(submission.getWeek()) + ")" + 
+                    s.substring(s.indexOf(",")));
         }
         
         System.out.println("\nyhteensä: " + totalDone + " tehtävää " + totalHours + " tuntia");

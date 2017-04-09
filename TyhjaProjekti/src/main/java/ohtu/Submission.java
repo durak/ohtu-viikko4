@@ -25,6 +25,10 @@ public class Submission {
         return hours;
     }
     
+    public Integer getWeek() {
+        return week;
+    }
+    
     public List<Integer> listDoneExercises() {
         List<Integer> dones = new ArrayList<>();
         if (a1) dones.add(1);
