@@ -15,6 +15,19 @@ public class Stepdefs {
     WebDriver driver = new ChromeDriver();
     String baseUrl = "http://localhost:4567";
 
+    @Given("^user with username \"([^\"]*)\" with password \"([^\"]*)\" is successfully created$")
+    public void user_with_username_with_password_is_successfully_created(String username, String password) throws Throwable {
+        new_user_is_selected();
+        correct_new_username_and_correct_password_and_correct_password_confirmation_are_given(username, password, password);
+
+    }
+
+    @Given("^user with username \"([^\"]*)\" and password \"([^\"]*)\" is unsuccessfully created$")
+    public void user_with_username_and_password_is_unsuccessfully_created(String username, String password) throws Throwable {
+        new_user_is_selected();
+        too_short_username_and_correct_password_and_correct_password_confirmation_are_given(username, password, password);
+    }
+
     @Given("^login is selected$")
     public void login_selected() throws Throwable {
         driver.get(baseUrl);
@@ -95,13 +108,12 @@ public class Stepdefs {
     public void already_taken_username_and_valid_password_and_valid_password_confirmation_are_given(String username, String password, String passwordConfirmation) throws Throwable {
         signUpWith(username, password, passwordConfirmation);
     }
-    
-        @When("^correct new username \"([^\"]*)\" and valid password \"([^\"]*)\" and not matching password confirmation \"([^\"]*)\" are given$")
+
+    @When("^correct new username \"([^\"]*)\" and valid password \"([^\"]*)\" and not matching password confirmation \"([^\"]*)\" are given$")
     public void correct_new_username_and_valid_password_and_not_matching_password_confirmation_are_given(String username, String password, String passwordConfirmation) throws Throwable {
         signUpWith(username, password, passwordConfirmation);
 
     }
-
 
     @Then("^user is created and forwarded to wellcome$")
     public void user_is_created_and_forwarded_to_wellcome() throws Throwable {
